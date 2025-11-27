@@ -1,6 +1,6 @@
-# Braze MCP Write Server
+# MCP Write Server
 
-A write-enabled extension of the official Braze MCP server, designed for Solution Engineers to create demos, trigger campaigns, and manage test environments.
+A **NON-OFFICIAL** write-enabled extension of the official Braze MCP server, designed for Solution Engineers to create demos, trigger campaigns, and manage test environments.
 
 ## ⚠️ Important Safety Notice
 
