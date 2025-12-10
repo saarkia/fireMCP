@@ -8,7 +8,13 @@ from typing import Any
 
 from mcp.server.fastmcp import Context
 
-from braze_mcp_write.utils import get_braze_context, get_logger, handle_response, make_request
+from braze_mcp_write.utils import (
+    get_braze_context,
+    get_logger,
+    handle_response,
+    make_request,
+    safe_write_operation,
+)
 
 __register_mcp_tools__ = True
 
@@ -20,6 +26,7 @@ logger = get_logger(__name__)
 # ============================================================================
 
 
+@safe_write_operation()
 async def create_content_block(
     ctx: Context,
     name: str,
@@ -67,6 +74,7 @@ async def create_content_block(
     return handle_response(response, dict, "create content block", logger)
 
 
+@safe_write_operation()
 async def update_content_block(
     ctx: Context,
     content_block_id: str,

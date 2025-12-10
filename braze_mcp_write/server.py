@@ -51,7 +51,8 @@ async def list_functions() -> dict[str, Any]:
             "total_functions": len(available_functions),
         }
 
-    except Exception:
+    except Exception as e:
+        logger.exception(f"Error listing functions: {e}")
         return internal_error("Error listing functions", "list_functions")
 
 
@@ -118,6 +119,7 @@ async def call_function(
 
         return result
 
-    except Exception:
+    except Exception as e:
+        logger.exception(f"Error calling function '{function_name}': {e}")
         return internal_error(f"Error calling function '{function_name}'", "call_function")
 

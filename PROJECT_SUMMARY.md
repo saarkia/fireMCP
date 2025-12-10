@@ -29,9 +29,9 @@ braze_mcp_write/
 └── main.py              # Entry point
 ```
 
-### Total Functions Implemented: 20
+### Total Functions Implemented: 21
 
-#### User Management (5)
+#### User Management (6)
 - `track_user_data` - Batch track attributes, events, purchases
 - `update_user_attributes` - Update user profiles
 - `track_event` - Track custom events

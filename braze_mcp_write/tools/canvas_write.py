@@ -8,7 +8,13 @@ from typing import Any
 
 from mcp.server.fastmcp import Context
 
-from braze_mcp_write.utils import get_braze_context, get_logger, handle_response, make_request
+from braze_mcp_write.utils import (
+    get_braze_context,
+    get_logger,
+    handle_response,
+    make_request,
+    safe_write_operation,
+)
 
 __register_mcp_tools__ = True
 
@@ -20,6 +26,7 @@ logger = get_logger(__name__)
 # ============================================================================
 
 
+@safe_write_operation(rate_limit_count=1000, rate_limit_window=3600)
 async def trigger_canvas(
     ctx: Context,
     canvas_id: str,
@@ -72,6 +79,7 @@ async def trigger_canvas(
     return handle_response(response, dict, "trigger canvas", logger)
 
 
+@safe_write_operation(rate_limit_count=1000, rate_limit_window=3600)
 async def schedule_canvas(
     ctx: Context,
     canvas_id: str,
@@ -117,6 +125,7 @@ async def schedule_canvas(
     return handle_response(response, dict, "schedule canvas", logger)
 
 
+@safe_write_operation()
 async def update_canvas_schedule(
     ctx: Context,
     canvas_id: str,
@@ -153,6 +162,7 @@ async def update_canvas_schedule(
     return handle_response(response, dict, "update canvas schedule", logger)
 
 
+@safe_write_operation(require_confirm=True)
 async def delete_scheduled_canvas(
     ctx: Context,
     canvas_id: str,
@@ -172,12 +182,6 @@ async def delete_scheduled_canvas(
     Returns:
         Dictionary with deletion confirmation
     """
-    if not confirm and not dry_run:
-        return {
-            "error": "Confirmation required",
-            "message": "Set confirm=True to delete scheduled canvas",
-        }
-
     url_path = "canvas/trigger/schedule/delete"
 
     body = {

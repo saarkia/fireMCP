@@ -9,7 +9,13 @@ from typing import Any
 
 from mcp.server.fastmcp import Context
 
-from braze_mcp_write.utils import get_braze_context, get_logger, handle_response, make_request
+from braze_mcp_write.utils import (
+    get_braze_context,
+    get_logger,
+    handle_response,
+    make_request,
+    safe_write_operation,
+)
 
 __register_mcp_tools__ = True
 
@@ -21,7 +27,7 @@ logger = get_logger(__name__)
 # ============================================================================
 
 
-# @safe_write_operation(rate_limit_count=1000, rate_limit_window=60)
+@safe_write_operation(rate_limit_count=1000, rate_limit_window=60)
 async def track_user_data(
     ctx: Context,
     attributes: list[dict[str, Any]] | None = None,
@@ -214,7 +220,7 @@ async def track_purchase(
 # ============================================================================
 
 
-# @safe_write_operation(require_confirm=True)
+@safe_write_operation(require_confirm=True)
 async def delete_user(
     ctx: Context,
     external_id: str | None = None,

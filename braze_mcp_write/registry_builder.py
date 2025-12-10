@@ -314,6 +314,9 @@ def extract_function_metadata(func) -> dict[str, Any]:
 
         parameters = {}
         for param_name, param in signature.parameters.items():
+            # Skip 'ctx' parameter - it's the MCP context, not a user parameter
+            if param_name == "ctx":
+                continue
             parameters[param_name] = _extract_parameter_info(
                 param_name, param, type_hints, func.__doc__
             )

@@ -8,7 +8,13 @@ from typing import Any
 
 from mcp.server.fastmcp import Context
 
-from braze_mcp_write.utils import get_braze_context, get_logger, handle_response, make_request
+from braze_mcp_write.utils import (
+    get_braze_context,
+    get_logger,
+    handle_response,
+    make_request,
+    safe_write_operation,
+)
 
 __register_mcp_tools__ = True
 
@@ -20,6 +26,7 @@ logger = get_logger(__name__)
 # ============================================================================
 
 
+@safe_write_operation(rate_limit_count=100, rate_limit_window=60)
 async def create_catalog_items(
     ctx: Context,
     catalog_name: str,
@@ -50,6 +57,7 @@ async def create_catalog_items(
     return handle_response(response, dict, "create catalog items", logger)
 
 
+@safe_write_operation(rate_limit_count=100, rate_limit_window=60)
 async def update_catalog_items(
     ctx: Context,
     catalog_name: str,
@@ -80,6 +88,7 @@ async def update_catalog_items(
     return handle_response(response, dict, "update catalog items", logger)
 
 
+@safe_write_operation(require_confirm=True)
 async def delete_catalog_items(
     ctx: Context,
     catalog_name: str,
@@ -99,12 +108,6 @@ async def delete_catalog_items(
     Returns:
         Dictionary with deletion confirmation
     """
-    if not confirm and not dry_run:
-        return {
-            "error": "Confirmation required",
-            "message": "Set confirm=True to delete catalog items",
-        }
-
     url_path = f"catalogs/{catalog_name}/items"
 
     body = {"items": [{"id": item_id} for item_id in item_ids]}
@@ -123,6 +126,7 @@ async def delete_catalog_items(
 # ============================================================================
 
 
+@safe_write_operation()
 async def create_catalog(
     ctx: Context,
     name: str,
@@ -163,6 +167,7 @@ async def create_catalog(
     return handle_response(response, dict, "create catalog", logger)
 
 
+@safe_write_operation(require_confirm=True)
 async def delete_catalog(
     ctx: Context,
     catalog_name: str,
@@ -183,12 +188,6 @@ async def delete_catalog(
     Returns:
         Dictionary with deletion confirmation
     """
-    if not confirm and not dry_run:
-        return {
-            "error": "Confirmation required",
-            "message": "Set confirm=True to delete catalog. This will delete all items in the catalog.",
-        }
-
     url_path = f"catalogs/{catalog_name}"
 
     bctx = get_braze_context(ctx)
