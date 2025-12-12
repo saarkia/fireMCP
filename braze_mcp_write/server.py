@@ -18,6 +18,9 @@ from braze_mcp_write.models.errors import (
 )
 from braze_mcp_write.registry_builder import FUNCTION_REGISTRY
 from braze_mcp_write.utils.context import braze_lifespan
+from braze_mcp_write.utils.logging import get_logger
+
+logger = get_logger(__name__)
 
 # Initialize FastMCP server
 mcp = FastMCP(
